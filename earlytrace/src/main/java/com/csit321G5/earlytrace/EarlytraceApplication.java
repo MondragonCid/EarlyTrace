@@ -1,4 +1,4 @@
-package com.csit321section.earlytrace;
+package com.csit321G5.earlytrace;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
