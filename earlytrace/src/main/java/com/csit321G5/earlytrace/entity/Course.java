@@ -16,6 +16,9 @@ public class Course {
     // instructorId methods
 
     // set & get
+    public Long getCourseId() {return courseId;}
+    public void setCourseId(Long courseId) {this.courseId = courseId;}
+
     public void setCourseTitle(String courseTitle) {this.courseTitle = courseTitle;}
     public void setCourseCode(String courseCode) {this.courseCode = courseCode;} 
 
