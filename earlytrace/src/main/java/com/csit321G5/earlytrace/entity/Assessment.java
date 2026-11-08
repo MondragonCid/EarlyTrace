@@ -13,7 +13,8 @@ public class Assessment {
     private Long assessmentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_id", insertable = false, updatable = false)
+        @JoinColumn(name = "course_id", insertable = false, updatable = false,
+                foreignKey = @ForeignKey(name = "fk_assessment_course"))
     @JsonIgnore
     private Course course;
 

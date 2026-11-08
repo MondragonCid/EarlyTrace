@@ -16,14 +16,12 @@ public class AssessmentController {
     @Autowired
     private AssessmentService assessmentService;
 
-    // CREATE
     @PostMapping
     public ResponseEntity<Assessment> createAssessment(@RequestBody Assessment assessment) {
         Assessment created = assessmentService.createAssessment(assessment);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    // READ all (optionally filtered: /api/assessments?courseId=1)
     @GetMapping
     public List<Assessment> getAllAssessments(@RequestParam(required = false) Long courseId) {
         if (courseId != null) {
@@ -32,7 +30,6 @@ public class AssessmentController {
         return assessmentService.getAllAssessments();
     }
 
-    // READ one
     @GetMapping("/{id}")
     public ResponseEntity<Assessment> getAssessmentById(@PathVariable Long id) {
         return assessmentService.getAssessmentById(id)
@@ -40,7 +37,6 @@ public class AssessmentController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // UPDATE
     @PutMapping("/{id}")
     public ResponseEntity<Assessment> updateAssessment(@PathVariable Long id,
                                                        @RequestBody Assessment details) {
@@ -49,7 +45,6 @@ public class AssessmentController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // DELETE
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAssessment(@PathVariable Long id) {
         if (assessmentService.deleteAssessment(id)) {
@@ -58,7 +53,6 @@ public class AssessmentController {
         return ResponseEntity.notFound().build();
     }
 
-    // Return 400 with the message when validation fails
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleBadRequest(IllegalArgumentException ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());
