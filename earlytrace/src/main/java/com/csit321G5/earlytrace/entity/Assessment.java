@@ -1,5 +1,6 @@
 package com.csit321G5.earlytrace.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -11,19 +12,20 @@ public class Assessment {
     @Column(name = "assessment_id")
     private Long assessmentId;
 
-    // FK to COURSE. Kept as a plain id until the Course entity is merged;
-    // then this can become @ManyToOne @JoinColumn(name = "course_id") private Course course;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id", insertable = false, updatable = false)
+    @JsonIgnore
+    private Course course;
+
     @Column(name = "course_id", nullable = false)
     private Long courseId;
 
     @Column(nullable = false)
     private String title;
 
-    // e.g. QUIZ, LAB, ASSIGNMENT, PROJECT, EXAM
     @Column(name = "assessment_type", nullable = false)
     private String assessmentType;
 
-    // e.g. CODECHUM, GOOGLE_FORMS, MS_TEAMS
     @Column(name = "source_platform")
     private String sourcePlatform;
 
@@ -33,9 +35,10 @@ public class Assessment {
     @Column(name = "weight_percentage", nullable = false)
     private Double weightPercentage;
 
-    // Getters and Setters
     public Long getAssessmentId() { return assessmentId; }
     public void setAssessmentId(Long assessmentId) { this.assessmentId = assessmentId; }
+
+    public Course getCourse() { return course; }
 
     public Long getCourseId() { return courseId; }
     public void setCourseId(Long courseId) { this.courseId = courseId; }

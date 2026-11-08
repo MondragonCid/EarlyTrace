@@ -2,6 +2,7 @@ package com.csit321G5.earlytrace.service;
 
 import com.csit321G5.earlytrace.entity.Assessment;
 import com.csit321G5.earlytrace.repository.AssessmentRepository;
+import com.csit321G5.earlytrace.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,9 @@ public class AssessmentService {
 
     @Autowired
     private AssessmentRepository assessmentRepository;
+
+    @Autowired
+    private CourseRepository courseRepository;
 
     public Assessment createAssessment(Assessment assessment) {
         validate(assessment);
@@ -55,6 +59,9 @@ public class AssessmentService {
     private void validate(Assessment a) {
         if (a.getCourseId() == null) {
             throw new IllegalArgumentException("courseId is required");
+        }
+        if (!courseRepository.existsById(a.getCourseId())) {
+            throw new IllegalArgumentException("Course " + a.getCourseId() + " does not exist");
         }
         if (a.getTitle() == null || a.getTitle().isBlank()) {
             throw new IllegalArgumentException("title is required");
