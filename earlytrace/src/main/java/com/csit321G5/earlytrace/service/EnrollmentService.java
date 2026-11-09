@@ -85,7 +85,7 @@ public class EnrollmentService {
         User user = userRepository.findById(ref.getId())
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "User " + ref.getId() + " not found"));
-        if (user.getRole() != Role.STUDENT) {
+        if (user.getRoleType() != Role.STUDENT) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "User " + user.getId() + " is not a student");
         }

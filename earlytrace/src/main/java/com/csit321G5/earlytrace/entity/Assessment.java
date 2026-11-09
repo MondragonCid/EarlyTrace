@@ -21,7 +21,7 @@ public class Assessment {
     @Column(name = "course_id", nullable = false)
     private Long courseId;
 
-    @Column(nullable = false)
+    @Column(name = "title", nullable = false)
     private String title;
 
     @Column(name = "assessment_type", nullable = false)
@@ -37,7 +37,6 @@ public class Assessment {
     private Double weightPercentage;
 
     public Long getAssessmentId() { return assessmentId; }
-    public void setAssessmentId(Long assessmentId) { this.assessmentId = assessmentId; }
 
     public Course getCourse() { return course; }
 
