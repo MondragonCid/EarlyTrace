@@ -3,8 +3,6 @@ package com.csit321G5.earlytrace.entity;
 
 import java.time.LocalDateTime;
 
-import org.springframework.cglib.core.Local;
-
 import jakarta.persistence.*;
 
 @Entity
