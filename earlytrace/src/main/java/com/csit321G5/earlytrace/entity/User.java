@@ -1,6 +1,9 @@
 package com.csit321G5.earlytrace.entity;
 
-import java.sql.Timestamp;
+
+import java.time.LocalDateTime;
+
+import org.springframework.cglib.core.Local;
 
 import jakarta.persistence.*;
 
@@ -25,12 +28,16 @@ public class User {
     @Column(nullable = false)
     private Role roleType;
 
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
+
     @Column(nullable = false, updatable = false)
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
     // Getters and Setters
     public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
@@ -44,6 +51,6 @@ public class User {
     public Role getRoleType() { return roleType; }
     public void setRoleType(Role roleType) { this.roleType = roleType; }
 
-    public Timestamp getTimestamp() { return createdAt; }
-    public void setTimestamp(Timestamp createdAt) { this.createdAt = createdAt; }
+    public LocalDateTime getTimestamp() { return createdAt; }
+    public void setTimestamp(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }
