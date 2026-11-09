@@ -30,13 +30,13 @@ public class CourseController {
         return cserv.getAllCourses();
     }
 
-    @GetMapping("/getCourseById")
-    public Optional<Course> getCourseById(@RequestParam Long courseId) {
+    @GetMapping("/getCourseById/{courseId}")
+    public Optional<Course> getCourseById(@PathVariable Long courseId) {
         return cserv.getCourseById(courseId);
     }
 
-    @PutMapping("/putCourseDetails")
-    public Course putCourseDetails(@RequestParam Long courseId,@RequestBody Course newCourse) {
+    @PutMapping("/putCourseDetails/{courseId}")
+    public Course putCourseDetails(@PathVariable Long courseId,@RequestBody Course newCourse) {
         return cserv.putCourseDetails(courseId, newCourse);
     }
 

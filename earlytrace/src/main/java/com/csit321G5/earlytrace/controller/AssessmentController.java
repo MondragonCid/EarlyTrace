@@ -16,13 +16,13 @@ public class AssessmentController {
     @Autowired
     private AssessmentService assessmentService;
 
-    @PostMapping
+    @PostMapping("/createAssessment")
     public ResponseEntity<Assessment> createAssessment(@RequestBody Assessment assessment) {
         Assessment created = assessmentService.createAssessment(assessment);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    @GetMapping
+    @GetMapping("/getAllAssessments")
     public List<Assessment> getAllAssessments(@RequestParam(required = false) Long courseId) {
         if (courseId != null) {
             return assessmentService.getAssessmentsByCourse(courseId);
@@ -30,14 +30,14 @@ public class AssessmentController {
         return assessmentService.getAllAssessments();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("getAssessmentById/{id}")
     public ResponseEntity<Assessment> getAssessmentById(@PathVariable Long id) {
         return assessmentService.getAssessmentById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("updateAssessment/{id}")
     public ResponseEntity<Assessment> updateAssessment(@PathVariable Long id,
                                                        @RequestBody Assessment details) {
         return assessmentService.updateAssessment(id, details)
@@ -45,7 +45,7 @@ public class AssessmentController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("deleteAssessment/{id}")
     public ResponseEntity<Void> deleteAssessment(@PathVariable Long id) {
         if (assessmentService.deleteAssessment(id)) {
             return ResponseEntity.noContent().build();

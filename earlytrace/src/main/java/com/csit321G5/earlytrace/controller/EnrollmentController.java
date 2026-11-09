@@ -16,37 +16,37 @@ public class EnrollmentController {
     @Autowired
     private EnrollmentService enrollmentService;
 
-    @PostMapping
+    @PostMapping("/createEnrollment")
     public ResponseEntity<Enrollment> createEnrollment(@RequestBody Enrollment enrollment) {
         return ResponseEntity.status(HttpStatus.CREATED).body(enrollmentService.createEnrollment(enrollment));
     }
 
-    @GetMapping
+    @GetMapping("/getAllEnrollments")
     public List<Enrollment> getAllEnrollments() {
         return enrollmentService.getAllEnrollments();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("getEnrollmentById/{id}")
     public Enrollment getEnrollmentById(@PathVariable Long id) {
         return enrollmentService.getEnrollmentById(id);
     }
 
-    @GetMapping("/course/{courseId}")
+    @GetMapping("getEnrollmentsByCourse/course/{courseId}")
     public List<Enrollment> getEnrollmentsByCourse(@PathVariable Long courseId) {
         return enrollmentService.getEnrollmentsByCourse(courseId);
     }
 
-    @GetMapping("/student/{studentId}")
+    @GetMapping("getEnrollmentsByStudent/student/{studentId}")
     public List<Enrollment> getEnrollmentsByStudent(@PathVariable Long studentId) {
         return enrollmentService.getEnrollmentsByStudent(studentId);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("updateEnrollment/{id}")
     public Enrollment updateEnrollment(@PathVariable Long id, @RequestBody Enrollment details) {
         return enrollmentService.updateEnrollment(id, details);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("deleteEnrollment/{id}")
     public ResponseEntity<Void> deleteEnrollment(@PathVariable Long id) {
         enrollmentService.deleteEnrollment(id);
         return ResponseEntity.ok().build();
