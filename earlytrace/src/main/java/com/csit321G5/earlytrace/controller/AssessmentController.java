@@ -16,7 +16,7 @@ public class AssessmentController {
     @Autowired
     private AssessmentService assessmentService;
 
-    @PostMapping("/createAssessment")
+    @PostMapping("/postAssessment")
     public ResponseEntity<Assessment> createAssessment(@RequestBody Assessment assessment) {
         Assessment created = assessmentService.createAssessment(assessment);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);

@@ -15,7 +15,7 @@ public class ConsultationController {
     @Autowired
     private ConsultationService cserv;
 
-    @PostMapping("/createConsultation")
+    @PostMapping("/postConsultation")
     public Consultation createConsultation(@RequestBody Consultation c) {
         return cserv.createConsultation(c);
     }

@@ -16,7 +16,7 @@ public class EnrollmentController {
     @Autowired
     private EnrollmentService enrollmentService;
 
-    @PostMapping("/createEnrollment")
+    @PostMapping("/postEnrollment")
     public ResponseEntity<Enrollment> createEnrollment(@RequestBody Enrollment enrollment) {
         return ResponseEntity.status(HttpStatus.CREATED).body(enrollmentService.createEnrollment(enrollment));
     }

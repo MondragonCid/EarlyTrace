@@ -15,7 +15,7 @@ public class RiskScoreController {
     @Autowired
     private RiskScoreService rserv;
  
-    @PostMapping("/createRiskScore")
+    @PostMapping("/postRiskScore")
     public RiskScore createRiskScore(@RequestBody RiskScore r) {
         return rserv.createRiskScore(r);
     }
