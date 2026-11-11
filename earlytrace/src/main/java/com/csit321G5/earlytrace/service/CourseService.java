@@ -48,11 +48,11 @@ public class CourseService {
     public String deleteCourse(Long courseId) {
         String msg = "";
 
-        if(crepo.findById(courseId) != null) {
+        if(crepo.existsById(courseId)) {
             crepo.deleteById(courseId);
             msg = "Course " + courseId + " successfully deleted";
         } else {
-            msg = "Error: Course + " + courseId + " not found";
+            msg = "Error: Course " + courseId + " not found";
         }
 
         return msg;
