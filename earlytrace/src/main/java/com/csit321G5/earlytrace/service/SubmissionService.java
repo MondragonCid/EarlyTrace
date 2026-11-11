@@ -39,11 +39,11 @@ public class SubmissionService {
     public String deleteSubmission(Long submissionId) {
         String msg = "";
 
-        if(srepo.findById(submissionId) != null) {
+        if(srepo.existsById(submissionId)) {
             srepo.deleteById(submissionId);
             msg = "Submission " + submissionId + " successfully deleted";
         } else {
-            msg = "Error: Submission + " + submissionId + " not found";
+            msg = "Error: Submission " + submissionId + " not found";
         }
 
         return msg;
