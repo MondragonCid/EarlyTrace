@@ -1,5 +1,7 @@
 package com.csit321G5.earlytrace.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 
 @Entity 
@@ -19,6 +21,12 @@ public class Student extends User {
     public Student() {
 
     }
+
+   @PrePersist
+    protected void onCreate() {
+        setRoleType(Role.STUDENT);
+        setTimestamp(LocalDateTime.now());
+    }  
 
     public Student(String email, String passwordHash, String fullName, 
         String studentNo, String program, int yearLevel) {
