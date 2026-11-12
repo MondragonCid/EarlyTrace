@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User {
     
     @Id
@@ -33,6 +34,18 @@ public class User {
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    // constructor
+    public User() {
+
+    }
+
+    public User(String email, String passwordHash, String fullName, Role roleType) {
+        this.email = email;
+        this.passwordHash = passwordHash;
+        this.fullName = fullName;
+        this.roleType = roleType;
+    }
 
     // Getters and Setters
     public Long getId() { return id; }
