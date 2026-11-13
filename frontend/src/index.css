@@ -396,3 +396,68 @@ tbody tr:last-child td {
   color: var(--color-muted);
   border-color: var(--color-border);
 }
+
+/* ===== Page pieces (User Management) ===== */
+.page-header {
+  margin-bottom: 1rem;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.filters .form-field {
+  flex: 1 1 220px;
+  max-width: 360px;
+}
+
+.result-count {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  margin: 0 0 0.5rem;
+}
+
+.panel {
+  max-width: 480px;
+  margin-bottom: 1.5rem;
+}
+
+.panel h2 {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.field-help {
+  color: var(--color-muted);
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.role-tag {
+  display: inline-block;
+  padding: 0.1rem 0.5rem;
+  border-radius: 4px;
+  background: #eef1f6;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Hidden on screen but still read by screen readers */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
