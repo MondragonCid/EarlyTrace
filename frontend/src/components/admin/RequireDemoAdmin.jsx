@@ -7,10 +7,10 @@ import { isDemoAllowed, hasDemoAccess } from '../../utils/demoAccess.js';
 function RequireDemoAdmin({ children }) {
   if (!isDemoAllowed()) {
     return (
-      <main className="center-page">
-        <div className="card start-card">
-          <h1>Login required</h1>
-          <p className="muted">Admin pages need login, which is not built yet.</p>
+      <main className="flex min-h-screen items-center justify-center p-4">
+        <div className="w-full max-w-[440px] rounded-lg border border-line bg-white p-6 text-center">
+          <h1 className="mb-1 text-[1.6rem] font-bold">Login required</h1>
+          <p className="my-4 text-muted">Admin pages need login, which is not built yet.</p>
         </div>
       </main>
     );

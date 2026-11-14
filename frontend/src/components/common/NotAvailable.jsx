@@ -2,9 +2,9 @@
 // `feature` = what the user wanted, `missing` = what the backend still needs.
 function NotAvailable({ feature, missing }) {
   return (
-    <div className="state-box state-info" role="note">
-      <p className="state-title">{feature}: not available yet</p>
-      <p>{missing}</p>
+    <div className="my-4 rounded-lg border border-info-border bg-info-bg p-5" role="note">
+      <p className="my-1 font-semibold">{feature}: not available yet</p>
+      <p className="my-1">{missing}</p>
     </div>
   );
 }

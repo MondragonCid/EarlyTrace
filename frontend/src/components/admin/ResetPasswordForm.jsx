@@ -3,6 +3,11 @@ import { updateUser } from '../../api/userApi.js';
 
 const MIN_LENGTH = 8;
 
+const FIELD = 'mb-3 flex flex-col gap-1';
+const LABEL = 'text-sm font-semibold';
+const HELP = 'm-0 text-sm text-muted';
+const ERROR = 'm-0 text-sm text-error';
+
 // Controlled form for setting a new password for one user.
 // Props:
 //   user    - the user whose password is being reset
@@ -61,22 +66,30 @@ function ResetPasswordForm({ user, onSaved, onCancel }) {
   }
 
   return (
-    <section className="card panel" aria-labelledby="reset-title">
-      <h2 id="reset-title">Reset password for {user.fullName}</h2>
-      <p className="muted">{user.email}</p>
+    <section
+      className="mb-6 max-w-[480px] rounded-lg border border-line bg-white p-6"
+      aria-labelledby="reset-title"
+    >
+      <h2 id="reset-title" className="text-[1.2rem] font-bold">
+        Reset password for {user.fullName}
+      </h2>
+      <p className="my-4 text-muted">{user.email}</p>
 
       {saveError && (
-        <p className="message message-error" role="alert">
+        <p className="my-4 rounded-lg bg-error-bg px-4 py-3 text-error" role="alert">
           Could not save the new password. {saveError}
         </p>
       )}
 
       <form onSubmit={handleSubmit} noValidate>
-        <div className="form-field">
-          <label htmlFor="new-password">New password</label>
+        <div className={FIELD}>
+          <label htmlFor="new-password" className={LABEL}>
+            New password
+          </label>
           <input
             id="new-password"
             type="password"
+            className="form-input"
             autoComplete="new-password"
             autoFocus
             value={newPassword}
@@ -84,16 +97,19 @@ function ResetPasswordForm({ user, onSaved, onCancel }) {
             aria-invalid={errors.newPassword ? 'true' : 'false'}
             aria-describedby="new-password-help"
           />
-          <p id="new-password-help" className={errors.newPassword ? 'field-error' : 'field-help'}>
+          <p id="new-password-help" className={errors.newPassword ? ERROR : HELP}>
             {errors.newPassword || `At least ${MIN_LENGTH} characters.`}
           </p>
         </div>
 
-        <div className="form-field">
-          <label htmlFor="confirm-password">Confirm new password</label>
+        <div className={FIELD}>
+          <label htmlFor="confirm-password" className={LABEL}>
+            Confirm new password
+          </label>
           <input
             id="confirm-password"
             type="password"
+            className="form-input"
             autoComplete="new-password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
@@ -101,13 +117,13 @@ function ResetPasswordForm({ user, onSaved, onCancel }) {
             aria-describedby={errors.confirmPassword ? 'confirm-password-error' : undefined}
           />
           {errors.confirmPassword && (
-            <p id="confirm-password-error" className="field-error">
+            <p id="confirm-password-error" className={ERROR}>
               {errors.confirmPassword}
             </p>
           )}
         </div>
 
-        <div className="form-actions">
+        <div className="mt-2 flex flex-wrap gap-2">
           <button type="submit" className="btn btn-primary" disabled={saving}>
             {saving ? 'Saving...' : 'Save new password'}
           </button>

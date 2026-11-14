@@ -9,10 +9,12 @@ import UserTable from '../../components/admin/UserTable.jsx';
 import ResetPasswordForm from '../../components/admin/ResetPasswordForm.jsx';
 
 function UserManagementPage() {
-  // Data from the backend
+  // Data from the backend. loading starts as true because we fetch right away.
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  // Increasing this number makes the useEffect below run again (used by "Try again").
+  const [reloadCount, setReloadCount] = useState(0);
 
   // Filter inputs (controlled by UserFilters)
   const [search, setSearch] = useState('');
@@ -22,23 +24,35 @@ function UserManagementPage() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
 
-  async function loadUsers() {
+  // Load the users when the page first appears, and again whenever
+  // reloadCount changes. State is only set inside the .then/.catch/.finally
+  // callbacks, after the backend has answered.
+  useEffect(() => {
+    let ignore = false; // becomes true if the page closes before the answer arrives
+
+    getAllUsers()
+      .then((data) => {
+        if (!ignore) setUsers(data);
+      })
+      .catch((err) => {
+        if (!ignore) setError(err.message);
+      })
+      .finally(() => {
+        if (!ignore) setLoading(false);
+      });
+
+    // Cleanup: runs when the page closes or before the effect runs again.
+    return () => {
+      ignore = true;
+    };
+  }, [reloadCount]);
+
+  // "Try again" button: show the spinner again, then trigger the effect.
+  function handleRetry() {
     setLoading(true);
     setError('');
-    try {
-      const data = await getAllUsers();
-      setUsers(data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+    setReloadCount(reloadCount + 1);
   }
-
-  // Load the users once, when the page first appears.
-  useEffect(() => {
-    loadUsers();
-  }, []);
 
   // Work out which users to show, based on the search text and role.
   const searchText = search.trim().toLowerCase();
@@ -73,7 +87,7 @@ function UserManagementPage() {
   if (loading) {
     content = <Loading message="Loading users..." />;
   } else if (error) {
-    content = <ErrorMessage message={error} onRetry={loadUsers} />;
+    content = <ErrorMessage message={error} onRetry={handleRetry} />;
   } else if (users.length === 0) {
     content = <EmptyState title="No users yet" message="Users will appear here once accounts are created." />;
   } else if (filteredUsers.length === 0) {
@@ -91,13 +105,13 @@ function UserManagementPage() {
 
   return (
     <section>
-      <div className="page-header">
-        <h1>User Management</h1>
-        <p className="muted">View all accounts, search and filter them, and reset passwords.</p>
+      <div className="mb-4">
+        <h1 className="mb-1 text-[1.6rem] font-bold">User Management</h1>
+        <p className="my-4 text-muted">View all accounts, search and filter them, and reset passwords.</p>
       </div>
 
       {successMessage && (
-        <p className="message message-success" role="status">
+        <p className="my-4 rounded-lg bg-success-bg px-4 py-3 text-success" role="status">
           {successMessage}
         </p>
       )}
@@ -119,7 +133,7 @@ function UserManagementPage() {
       />
 
       {!loading && !error && users.length > 0 && (
-        <p className="result-count" aria-live="polite">
+        <p className="mb-2 text-sm text-muted" aria-live="polite">
           Showing {filteredUsers.length} of {users.length} users
         </p>
       )}

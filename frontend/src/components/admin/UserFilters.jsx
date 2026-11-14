@@ -9,23 +9,35 @@ const ROLE_OPTIONS = [
   { value: 'STUDENT', label: 'Student' },
 ];
 
+const FIELD = 'mb-3 flex max-w-[360px] flex-[1_1_220px] flex-col gap-1';
+
 function UserFilters({ search, role, onSearchChange, onRoleChange }) {
   return (
-    <div className="filters">
-      <div className="form-field">
-        <label htmlFor="user-search">Search by name or email</label>
+    <div className="mb-2 flex flex-wrap gap-4">
+      <div className={FIELD}>
+        <label htmlFor="user-search" className="text-sm font-semibold">
+          Search by name or email
+        </label>
         <input
           id="user-search"
           type="search"
+          className="form-input"
           placeholder="e.g. Juan or juan@school.edu"
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
         />
       </div>
 
-      <div className="form-field">
-        <label htmlFor="role-filter">Role</label>
-        <select id="role-filter" value={role} onChange={(e) => onRoleChange(e.target.value)}>
+      <div className={FIELD}>
+        <label htmlFor="role-filter" className="text-sm font-semibold">
+          Role
+        </label>
+        <select
+          id="role-filter"
+          className="form-input"
+          value={role}
+          onChange={(e) => onRoleChange(e.target.value)}
+        >
           {ROLE_OPTIONS.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}

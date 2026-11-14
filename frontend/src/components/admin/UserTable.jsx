@@ -9,6 +9,9 @@ const ROLE_LABELS = {
   STUDENT: 'Student',
 };
 
+const TH = 'whitespace-nowrap bg-subtle px-3 py-2.5 text-left text-[0.85rem] font-bold uppercase tracking-wide text-muted';
+const TD = 'whitespace-nowrap px-3 py-2.5 text-left';
+
 // The backend sends the created date as "timestamp", e.g. "2026-11-13T09:30:00".
 function formatDate(value) {
   if (!value) return '—';
@@ -19,28 +22,30 @@ function formatDate(value) {
 
 function UserTable({ users, onResetPassword }) {
   return (
-    <div className="table-wrapper">
-      <table>
-        <caption className="visually-hidden">Users</caption>
+    <div className="overflow-x-auto rounded-lg border border-line bg-white">
+      <table className="w-full border-collapse">
+        <caption className="sr-only">Users</caption>
         <thead>
-          <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Role</th>
-            <th scope="col">Created</th>
-            <th scope="col">Actions</th>
+          <tr className="border-b border-line">
+            <th scope="col" className={TH}>Name</th>
+            <th scope="col" className={TH}>Email</th>
+            <th scope="col" className={TH}>Role</th>
+            <th scope="col" className={TH}>Created</th>
+            <th scope="col" className={TH}>Actions</th>
           </tr>
         </thead>
         <tbody>
           {users.map((user) => (
-            <tr key={user.id}>
-              <td>{user.fullName}</td>
-              <td>{user.email}</td>
-              <td>
-                <span className="role-tag">{ROLE_LABELS[user.roleType] || user.roleType}</span>
+            <tr key={user.id} className="border-b border-line last:border-b-0">
+              <td className={TD}>{user.fullName}</td>
+              <td className={TD}>{user.email}</td>
+              <td className={TD}>
+                <span className="inline-block rounded bg-subtle px-2 py-0.5 text-[0.85rem] font-semibold">
+                  {ROLE_LABELS[user.roleType] || user.roleType}
+                </span>
               </td>
-              <td>{formatDate(user.timestamp)}</td>
-              <td>
+              <td className={TD}>{formatDate(user.timestamp)}</td>
+              <td className={TD}>
                 <button
                   type="button"
                   className="btn btn-small"
