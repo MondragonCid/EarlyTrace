@@ -1,0 +1,11 @@
+# Installed packages and build output are never committed
+node_modules/
+dist/
+
+# Logs and local env files
+*.log
+.env.local
+.env.*.local
+
+# Editor / OS files
+.DS_Store
