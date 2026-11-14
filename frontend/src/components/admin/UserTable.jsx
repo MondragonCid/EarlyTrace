@@ -2,23 +2,11 @@
 // Props:
 //   users           - the (already filtered) array of users to show
 //   onResetPassword - function called with a user when "Reset password" is clicked
-
-const ROLE_LABELS = {
-  ADMIN: 'Admin',
-  INSTRUCTOR: 'Instructor',
-  STUDENT: 'Student',
-};
+import { formatDate } from '../../utils/formatDate.js';
+import { ROLE_LABELS } from '../../utils/roles.js';
 
 const TH = 'whitespace-nowrap bg-subtle px-3 py-2.5 text-left text-[0.85rem] font-bold uppercase tracking-wide text-muted';
 const TD = 'whitespace-nowrap px-3 py-2.5 text-left';
-
-// The backend sends the created date as "timestamp", e.g. "2026-11-13T09:30:00".
-function formatDate(value) {
-  if (!value) return '—';
-  const date = new Date(value);
-  if (isNaN(date)) return '—';
-  return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
-}
 
 function UserTable({ users, onResetPassword }) {
   return (
