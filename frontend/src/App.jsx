@@ -1,17 +1,17 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
+import LoginPage from './pages/LoginPage.jsx'
+import WelcomePage from './pages/WelcomePage.jsx'
 
 function App() {
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          <div className="min-h-screen bg-slate-100 p-8">
-            <h1 className="text-3xl font-bold text-emerald-800">EarlyTrace</h1>
-            <p className="mt-2 text-slate-600">Frontend setup works.</p>
-          </div>
-        }
-      />
+      <Route path="/" element={<Navigate to="/login" />} />
+      <Route path="/login" element={<LoginPage />} />
+
+      {/* TEMPORARY until the real dashboards are built */}
+      <Route path="/admin" element={<WelcomePage />} />
+      <Route path="/instructor" element={<WelcomePage />} />
+      <Route path="/student" element={<WelcomePage />} />
     </Routes>
   )
 }
