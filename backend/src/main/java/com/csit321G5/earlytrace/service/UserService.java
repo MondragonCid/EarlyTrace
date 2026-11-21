@@ -38,7 +38,20 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+    // public void deleteUser(Long id) {
+    //     userRepository.deleteById(id);
+    // }
+
+    public String deleteUser(Long id) {
+        String msg = "";
+
+        if(userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+            msg = "Course " + id + " successfully deleted";
+        } else {
+            msg = "Error: Course " + id + " not found";
+        }
+
+        return msg;
     }
 }

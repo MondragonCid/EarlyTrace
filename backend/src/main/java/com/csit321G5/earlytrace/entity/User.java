@@ -26,13 +26,13 @@ public class User {
     @Column(nullable = false)
     private Role roleType;
 
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
+    // @PrePersist
+    // protected void onCreate() {
+    //     this.createdAt = LocalDateTime.now();
+    // }
 
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    // @Column(nullable = false, updatable = false)
+    // private LocalDateTime createdAt;
 
     // Getters and Setters
     public Long getId() { return id; }
@@ -49,6 +49,6 @@ public class User {
     public Role getRoleType() { return roleType; }
     public void setRoleType(Role roleType) { this.roleType = roleType; }
 
-    public LocalDateTime getTimestamp() { return createdAt; }
-    public void setTimestamp(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    // public LocalDateTime getTimestamp() { return createdAt; }
+    // public void setTimestamp(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }
