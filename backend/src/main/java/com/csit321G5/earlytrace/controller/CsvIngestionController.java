@@ -13,7 +13,11 @@ import com.csit321G5.earlytrace.service.CsvIngestionService;
 @RequestMapping("/api/csv-ingestion")
 public class CsvIngestionController {
 
-    private final CsvIngestionService csvingestionservice = new CsvIngestionService();
+    private final CsvIngestionService csvingestionservice;
+
+    public CsvIngestionController(CsvIngestionService csvingestionservice) {
+        this.csvingestionservice = csvingestionservice;
+    }
 
     @PostMapping("/uploadCsv")
 
