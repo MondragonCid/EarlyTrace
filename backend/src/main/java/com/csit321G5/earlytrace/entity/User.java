@@ -3,6 +3,8 @@ package com.csit321G5.earlytrace.entity;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -16,6 +18,9 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    // WRITE_ONLY: the password can be sent TO the backend (register, reset),
+    // but it is never included in the JSON the backend sends back.
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(nullable = false)
     private String passwordHash;
 
@@ -25,6 +30,11 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role roleType;
+
+    // PENDING, ACTIVE or INACTIVE. Set by UserService when the user registers.
+    @Enumerated(EnumType.STRING)
+    @Column(length = 10)
+    private AccountStatus status;
 
     @PrePersist
     protected void onCreate() {
@@ -48,6 +58,9 @@ public class User {
 
     public Role getRoleType() { return roleType; }
     public void setRoleType(Role roleType) { this.roleType = roleType; }
+
+    public AccountStatus getStatus() { return status; }
+    public void setStatus(AccountStatus status) { this.status = status; }
 
     public LocalDateTime getTimestamp() { return createdAt; }
     public void setTimestamp(LocalDateTime createdAt) { this.createdAt = createdAt; }

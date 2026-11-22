@@ -1,5 +1,7 @@
 package com.csit321G5.earlytrace.controller;
 
+import com.csit321G5.earlytrace.dto.LoginRequest;
+import com.csit321G5.earlytrace.dto.StatusRequest;
 import com.csit321G5.earlytrace.entity.User;
 import com.csit321G5.earlytrace.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,11 @@ public class UserController {
         return userService.createUser(user);
     }
 
+    @PostMapping("/login")
+    public User login(@RequestBody LoginRequest request) {
+        return userService.login(request.getEmail(), request.getPassword());
+    }
+
     @GetMapping("/getAllUsers")
     public List<User> getAllUsers() {
         return userService.getAllUsers();
@@ -35,6 +42,11 @@ public class UserController {
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
         User updatedUser = userService.updateUser(id, userDetails);
         return ResponseEntity.ok(updatedUser);
+    }
+
+    @PutMapping("/updateStatus/{id}")
+    public User updateStatus(@PathVariable Long id, @RequestBody StatusRequest request) {
+        return userService.updateStatus(id, request.getStatus());
     }
 
     @DeleteMapping("/deleteUser/{id}")
