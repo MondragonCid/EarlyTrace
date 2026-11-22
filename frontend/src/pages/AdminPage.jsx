@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import StatCard from '../components/admin/StatCard.jsx'
 import UserTable from '../components/admin/UserTable.jsx'
 import ResetPasswordForm from '../components/admin/ResetPasswordForm.jsx'
+import PendingApprovals from '../components/admin/PendingApprovals.jsx'
 
 function AdminPage() {
   const navigate = useNavigate()
@@ -66,6 +67,27 @@ function AdminPage() {
     }
   }
 
+  // Approve, reject, activate or deactivate a user
+  async function handleChangeStatus(user, newStatus) {
+    try {
+      const response = await fetch(`/api/users/updateStatus/${user.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      })
+      if (!response.ok) {
+        throw new Error('Could not change the account status.')
+      }
+      const savedUser = await response.json()
+
+      // Replace the old copy of this user in the list with the saved one
+      setUsers(users.map((u) => (u.id === savedUser.id ? savedUser : u)))
+      setMessage(`${savedUser.fullName} is now ${savedUser.status}.`)
+    } catch (err) {
+      setMessage(err.message)
+    }
+  }
+
   function handleLogout() {
     localStorage.removeItem('currentUser')
     navigate('/login')
@@ -87,6 +109,11 @@ function AdminPage() {
   const admins = users.filter((u) => u.roleType === 'ADMIN').length
   const instructors = users.filter((u) => u.roleType === 'INSTRUCTOR').length
   const students = users.filter((u) => u.roleType === 'STUDENT').length
+
+  // Count users per status
+  const pendingUsers = users.filter((u) => u.status === 'PENDING')
+  const active = users.filter((u) => u.status === 'ACTIVE').length
+  const inactive = users.filter((u) => u.status === 'INACTIVE').length
 
   // Keep only the users that match the search text and role
   const filteredUsers = users.filter((user) => {
@@ -126,7 +153,14 @@ function AdminPage() {
               <StatCard label="Admins" value={admins} />
               <StatCard label="Instructors" value={instructors} />
               <StatCard label="Students" value={students} />
+              <StatCard label="Pending approval" value={pendingUsers.length} />
+              <StatCard label="Active" value={active} />
+              <StatCard label="Inactive" value={inactive} />
             </div>
+
+            {message && <p className="mb-4 rounded-md bg-emerald-50 p-3 text-emerald-800">{message}</p>}
+
+            <PendingApprovals users={pendingUsers} onChangeStatus={handleChangeStatus} />
 
             <h2 className="mb-3 text-xl font-bold">User management</h2>
 
@@ -150,8 +184,6 @@ function AdminPage() {
               </select>
             </div>
 
-            {message && <p className="mb-4 rounded-md bg-emerald-50 p-3 text-emerald-800">{message}</p>}
-
             {selectedUser && (
               <ResetPasswordForm
                 user={selectedUser}
@@ -171,6 +203,7 @@ function AdminPage() {
                   setSelectedUser(user)
                   setMessage('')
                 }}
+                onChangeStatus={handleChangeStatus}
               />
             )}
           </>

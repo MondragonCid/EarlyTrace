@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 // Props:
-//   onRegistered - called with the new user's name after saving
+//   onRegistered - called with the new user's name and role after saving
 //   onSwitch     - called when the user clicks "Log in"
 function RegisterForm({ onRegistered, onSwitch }) {
   const [fullName, setFullName] = useState('')
@@ -48,11 +48,15 @@ function RegisterForm({ onRegistered, onSwitch }) {
         }),
       })
 
+      if (response.status === 409) {
+        setError('This email is already registered.')
+        return
+      }
       if (!response.ok) {
-        throw new Error('Could not create the account. The email may already be used.')
+        throw new Error('Could not create the account. Please try again.')
       }
 
-      onRegistered(fullName)
+      onRegistered(fullName, role)
     } catch (err) {
       setError(err.message)
     } finally {

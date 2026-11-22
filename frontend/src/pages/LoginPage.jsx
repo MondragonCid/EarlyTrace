@@ -7,8 +7,12 @@ function LoginPage() {
   const [mode, setMode] = useState('login')
   const [message, setMessage] = useState('')
 
-  function handleRegistered(name) {
-    setMessage(`Account created for ${name}. You can now log in.`)
+  function handleRegistered(name, role) {
+    if (role === 'INSTRUCTOR') {
+      setMessage(`Account created for ${name}. An admin needs to approve it before you can log in.`)
+    } else {
+      setMessage(`Account created for ${name}. You can now log in.`)
+    }
     setMode('login')
   }
 

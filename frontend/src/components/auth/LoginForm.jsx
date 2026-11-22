@@ -22,22 +22,27 @@ function LoginForm({ onSwitch }) {
     setLoading(true)
 
     try {
-      // TEMPORARY: the backend has no login endpoint yet, so we get all users
-      // and look for a matching email and password here in the browser.
-      const response = await fetch('/api/users/getAllUsers')
-      if (!response.ok) {
-        throw new Error('Could not reach the server.')
-      }
-      const users = await response.json()
+      // Send the email and password to the backend to check them
+      const response = await fetch('/api/users/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, password: password }),
+      })
 
-      const user = users.find(
-        (u) => u.email === email && u.passwordHash === password
-      )
-
-      if (!user) {
+      if (response.status === 401) {
         setError('Wrong email or password.')
         return
       }
+      if (response.status === 403) {
+        setError('Your account is not active. If you are a new instructor, wait for an admin to approve it.')
+        return
+      }
+      if (!response.ok) {
+        throw new Error('Could not reach the server.')
+      }
+
+      // The backend sends back the user (never the password)
+      const user = await response.json()
 
       // Remember who is logged in (without the password)
       localStorage.setItem(
