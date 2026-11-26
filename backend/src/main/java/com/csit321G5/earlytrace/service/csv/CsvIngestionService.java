@@ -1,8 +1,9 @@
-package com.csit321G5.earlytrace.service;
+package com.csit321G5.earlytrace.service.csv;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.csv.CSVFormat;
@@ -14,9 +15,12 @@ import org.springframework.web.multipart.MultipartFile;
 @Service 
 public class CsvIngestionService {
     private final CsvValidationService csvvalidationservice;
+    private final CsvRowValidationService csvrowvalidationservice;
 
-    public CsvIngestionService(CsvValidationService csvvalidationservice) {
+    public CsvIngestionService(CsvValidationService csvvalidationservice,
+        CsvRowValidationService csvrowvalidationservice) {
         this.csvvalidationservice = csvvalidationservice;
+        this.csvrowvalidationservice = csvrowvalidationservice;
     }
 
     // read & parse CSV file and count records
@@ -35,6 +39,7 @@ public class CsvIngestionService {
                 .get()
                 .parse(reader)
         ) {
+            // validate headers
             List<String> missingHeaders = csvvalidationservice.findMissingHeaders(
                 parser.getHeaderMap().keySet()
             );
@@ -45,10 +50,24 @@ public class CsvIngestionService {
                 );
             }
 
+            // validate individual rows
+            List<String> validationErrors = new ArrayList<>();
+
             int rowCount = 0;
 
             for(CSVRecord record : parser) {
                 rowCount++;
+                
+                List<String> rowErrors = csvrowvalidationservice.validateRow(record);
+
+                System.out.println("ROW ERRORS: "+ rowErrors);
+
+                validationErrors.addAll(rowErrors);
+            }
+
+            // reject file if row contains errors
+            if(!validationErrors.isEmpty()) {
+                throw new IllegalArgumentException("CSV row validation failed:\n" + String.join("\n", validationErrors));
             }
 
             return rowCount;

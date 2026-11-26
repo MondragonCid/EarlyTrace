@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.csit321G5.earlytrace.service.CsvIngestionService;
+import com.csit321G5.earlytrace.service.csv.CsvIngestionService;
 
 
 @RestController
@@ -39,15 +39,16 @@ public class CsvIngestionController {
             "message", "CSV file uploaded successfully.",
             "filename", filename,
             "size", file.getSize(),
-            "totalRecords", totalRecords
+            "recordsFound", totalRecords
         ));  
 
 
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of(
-                "message", "Error processing CSV file.",
-                "error", e.getMessage()
-            ));
+            return ResponseEntity.internalServerError().body(
+             Map.of("message", "An error occured while processing the CSV file.")   
+            );
         }
 
         
