@@ -48,7 +48,7 @@ public class CsvIngestionService {
     }
 
     // read & parse CSV file and count records
-    public int readAndParseCsv(MultipartFile file, CsvPlatform platform) throws Exception {
+    public List<ImportedSubmission> readAndParseCsv(MultipartFile file, CsvPlatform platform) throws Exception {
 
         try(
             BufferedReader reader = new BufferedReader(
@@ -81,8 +81,6 @@ public class CsvIngestionService {
             // validate individual rows
             List<String> validationErrors = new ArrayList<>();
 
-            int rowCount = 0;
-
             for(int i = 0; i < submissions.size(); i++) {             
                 List<String> rowErrors = csvrowvalidationservice.validateSubmission(
                     submissions.get(i), i + 2);
@@ -94,7 +92,7 @@ public class CsvIngestionService {
                 throw new IllegalArgumentException("CSV row validation failed:\n" + String.join("\n", validationErrors));
             }
 
-            return submissions.size();
+            return submissions;
         }
         
     }

@@ -49,7 +49,7 @@ public class EnrollmentService {
     }
 
     public List<Enrollment> getEnrollmentsByCourse(Long courseId) {
-        return enrollmentRepository.findByCourseCourseId(courseId);
+        return enrollmentRepository.findByCourseId(courseId);
     }
 
     public List<Enrollment> getEnrollmentsByStudent(Long studentId) {
@@ -114,7 +114,7 @@ public class EnrollmentService {
     }
 
     private void checkDuplicate(Long studentId, Long courseId, Long currentId) {
-        Optional<Enrollment> existing = enrollmentRepository.findByStudentIdAndCourseCourseId(studentId, courseId);
+        Optional<Enrollment> existing = enrollmentRepository.findByStudentIdAndCourseId(studentId, courseId);
         if (existing.isPresent() && !existing.get().getId().equals(currentId)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT,
                     "Student " + studentId + " is already enrolled in course " + courseId);

@@ -10,53 +10,49 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.csit321G5.earlytrace.service.csv.CsvIngestionService;
 import com.csit321G5.earlytrace.service.csv.CsvPlatform;
+import com.csit321G5.earlytrace.service.csv.parser.CsvDatabaseImportService;
 
 @RestController
 @RequestMapping("/api/csv-ingestion")
 public class CsvIngestionController {
 
-    private final CsvIngestionService csvIngestionService;
+    private final CsvDatabaseImportService csvdbimportservice;
 
-    public CsvIngestionController(CsvIngestionService csvIngestionService) {
-        this.csvIngestionService = csvIngestionService;
+    public CsvIngestionController(CsvDatabaseImportService csvdbimportservice) {
+        this.csvdbimportservice = csvdbimportservice;
     }
 
     @PostMapping("/uploadCsv")
     public ResponseEntity<?> uploadCsv(
         @RequestParam("file") MultipartFile file,
-        @RequestParam("platform") CsvPlatform platform
+        @RequestParam("platform") CsvPlatform platform,
+        @RequestParam("courseId") Long courseId,
+        @RequestParam("instructorId") Long instructorId
     ) {
 
-        if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body(
-                Map.of("message", "Please upload a CSV file.")
-            );
-        }
-
-        String filename = file.getOriginalFilename();
-
-        if (filename == null || !filename.toLowerCase().endsWith(".csv")) {
-            return ResponseEntity.badRequest().body(
-                Map.of("message", "Invalid file type. Only CSV files allowed.")
-            );
-        }
-
         try {
-            int totalRecords =
-                csvIngestionService.readAndParseCsv(file, platform);
+            if (file.isEmpty()) {
+                return ResponseEntity.badRequest().body(
+                Map.of("message", "Please upload a CSV file."));
+            }
+            
+            if(!file.getOriginalFilename().toLowerCase().endsWith(".csv")) {
+                return ResponseEntity.badRequest().body(
+                Map.of("message", "Only CSV files allowed."));
+            }
+            
+            int recordsImported = csvdbimportservice.importCsv(file, platform, courseId, instructorId);
 
             return ResponseEntity.ok(Map.of(
                 "message", "CSV file uploaded and validated successfully.",
-                "filename", filename,
+                "filename", file.getOriginalFilename(),
                 "platform", platform.name(),
-                "size", file.getSize(),
-                "recordsFound", totalRecords
+                "courseId", courseId,
+                "recordsImported", recordsImported
             ));
-
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(
+        } catch(IllegalArgumentException e) {
+             return ResponseEntity.badRequest().body(
                 Map.of("message", e.getMessage())
             );
 
@@ -65,6 +61,7 @@ public class CsvIngestionController {
                 Map.of("message", "An error occurred while processing the CSV file.")
             );
         }
+
     }
 }
 

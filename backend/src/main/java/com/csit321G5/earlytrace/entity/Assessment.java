@@ -33,7 +33,8 @@ public class Assessment {
     @Column(name = "max_score", nullable = false)
     private Double maxScore;
 
-    @Column(name = "weight_percentage", nullable = false)
+    // changed nullable to false to avoid mandatory assessment weights (for now)
+    @Column(name = "weight_percentage", nullable = true)
     private Double weightPercentage;
 
     public Long getAssessmentId() { return assessmentId; }
