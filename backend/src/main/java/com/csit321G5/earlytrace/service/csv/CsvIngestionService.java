@@ -12,19 +12,43 @@ import org.apache.commons.csv.CSVRecord;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.csit321G5.earlytrace.dto.ImportedSubmission;
+import com.csit321G5.earlytrace.service.csv.parser.CodeChumCsvParser;
+import com.csit321G5.earlytrace.service.csv.parser.GoogleFormsParser;
+import com.csit321G5.earlytrace.service.csv.parser.PlatformCsvParser;
+import com.csit321G5.earlytrace.service.csv.parser.TeamsCsvParser;
+
 @Service 
 public class CsvIngestionService {
     private final CsvValidationService csvvalidationservice;
     private final CsvRowValidationService csvrowvalidationservice;
 
+    private final CodeChumCsvParser codechumparser;
+    private final GoogleFormsParser formsparser;
+    private final TeamsCsvParser teamsparser;
+
+
     public CsvIngestionService(CsvValidationService csvvalidationservice,
-        CsvRowValidationService csvrowvalidationservice) {
+        CsvRowValidationService csvrowvalidationservice, CodeChumCsvParser codechumparser,
+        GoogleFormsParser formsparser, TeamsCsvParser teamsparser) {
         this.csvvalidationservice = csvvalidationservice;
         this.csvrowvalidationservice = csvrowvalidationservice;
+        this.codechumparser = codechumparser;
+        this.formsparser = formsparser;
+        this.teamsparser = teamsparser;
+    }
+
+    // chooses parser based on uploaded platform
+    private PlatformCsvParser getParser(CsvPlatform platform) {
+        return switch(platform) {
+            case CODECHUM -> codechumparser;
+            case GOOGLE_FORMS -> formsparser;
+            case MS_TEAMS -> teamsparser;
+        };
     }
 
     // read & parse CSV file and count records
-    public int readAndParseCsv(MultipartFile file) throws Exception {
+    public int readAndParseCsv(MultipartFile file, CsvPlatform platform) throws Exception {
 
         try(
             BufferedReader reader = new BufferedReader(
@@ -41,7 +65,7 @@ public class CsvIngestionService {
         ) {
             // validate headers
             List<String> missingHeaders = csvvalidationservice.findMissingHeaders(
-                parser.getHeaderMap().keySet()
+                platform, parser.getHeaderMap().keySet()
             );
 
             if(!missingHeaders.isEmpty()) {
@@ -50,18 +74,18 @@ public class CsvIngestionService {
                 );
             }
 
+            // parse platform-specific CSV rows into normalized records
+            PlatformCsvParser platformParser = getParser(platform);
+            List<ImportedSubmission> submissions = platformParser.parse(parser);
+
             // validate individual rows
             List<String> validationErrors = new ArrayList<>();
 
             int rowCount = 0;
 
-            for(CSVRecord record : parser) {
-                rowCount++;
-                
-                List<String> rowErrors = csvrowvalidationservice.validateRow(record);
-
-                System.out.println("ROW ERRORS: "+ rowErrors);
-
+            for(int i = 0; i < submissions.size(); i++) {             
+                List<String> rowErrors = csvrowvalidationservice.validateSubmission(
+                    submissions.get(i), i + 2);
                 validationErrors.addAll(rowErrors);
             }
 
@@ -70,7 +94,7 @@ public class CsvIngestionService {
                 throw new IllegalArgumentException("CSV row validation failed:\n" + String.join("\n", validationErrors));
             }
 
-            return rowCount;
+            return submissions.size();
         }
         
     }
